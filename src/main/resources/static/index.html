@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #todoForm {
+            margin-bottom: 20px;
+        }
+        #todoList {
+            list-style-type: none;
+            padding: 0;
+        }
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .todo-item button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Todo List</h1>
+
+<form id="todoForm">
+    <input type="text" id="todoTitle" placeholder="할 일 제목" required>
+    <input type="text" id="todoDescription" placeholder="설명 (선택사항)">
+    <button type="submit">추가</button>
+</form>
+
+<ul id="todoList"></ul>
+
+<script>
+    const API_URL = '/api/todos';
+
+    // Todo 목록 가져오기
+    async function fetchTodos() {
+        const response = await fetch(API_URL);
+        const todos = await response.json();
+        const todoList = document.getElementById('todoList');
+        todoList.innerHTML = '';
+        todos.forEach(todo => {
+            const li = document.createElement('li');
+            li.className = 'todo-item';
+            li.innerHTML = `
+                <span>${todo.title} - ${todo.description || '설명 없음'}</span>
+                <div>
+                    <button onclick="toggleTodo(${todo.id}, ${!todo.completed})">
+                        ${todo.completed ? '완료 취소' : '완료'}
+                    </button>
+                    <button onclick="deleteTodo(${todo.id})">삭제</button>
+                </div>
+            `;
+            todoList.appendChild(li);
+        });
+    }
+
+    // 새 Todo 추가
+    async function addTodo(event) {
+        event.preventDefault();
+        const title = document.getElementById('todoTitle').value;
+        const description = document.getElementById('todoDescription').value;
+        await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description, completed: false })
+        });
+        document.getElementById('todoForm').reset();
+        fetchTodos();
+    }
+
+    // Todo 상태 토글 (완료/미완료)
+    async function toggleTodo(id, completed) {
+        await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ completed })
+        });
+        fetchTodos();
+    }
+
+    // Todo 삭제
+    async function deleteTodo(id) {
+        await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        fetchTodos();
+    }
+
+    document.getElementById('todoForm').addEventListener('submit', addTodo);
+    fetchTodos();
+</script>
+</body>
+</html>
