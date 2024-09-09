@@ -106,8 +106,7 @@ CREATE TABLE todos (
     {
         "title": "새로운 할 일",
         "description": "새로운 할 일 설명",
-        "completed": false,
-        "created_at": "2023-09-09T12:30:00"
+        "completed": false
     }
     ```
 
@@ -118,8 +117,7 @@ CREATE TABLE todos (
         "id": 3,
         "title": "새로운 할 일",
         "description": "새로운 할 일 설명",
-        "completed": false,
-        "created_at": "2023-09-09T12:30:00"
+        "completed": false
     }
     ```
 
@@ -134,8 +132,7 @@ CREATE TABLE todos (
     {
         "title": "수정된 할 일 제목",
         "description": "수정된 할 일 설명",
-        "completed": true,
-        "updated_at": "2023-09-09T15:30:00"
+        "completed": true
     }
     ```
 
@@ -146,8 +143,7 @@ CREATE TABLE todos (
         "id": 1,
         "title": "수정된 할 일 제목",
         "description": "수정된 할 일 설명",
-        "completed": true,
-        "updated_at": "2023-09-09T15:30:00"
+        "completed": true
     }
     ```
 
