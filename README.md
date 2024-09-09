@@ -31,7 +31,7 @@
     ./gradlew bootrun  
     ```
 
-5. 애플리케이션이 실행되면, `http://localhost:8082`에서 API를 사용할 수 있습니다.
+5. 애플리케이션이 실행되면, `http://localhost:8080`에서 API를 사용할 수 있습니다.
 
 ## 데이터베이스 스키마
 
