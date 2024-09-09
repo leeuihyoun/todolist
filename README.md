@@ -13,7 +13,7 @@
 ## 주요 기술 스택
 
 - **Java 17**
-- **Spring Boot 4.0**
+- **Spring Boot 3.3**
 - **AWS 데이터베이스 배포***
 - **JPA** (Java Persistence API)
 
