@@ -5,8 +5,8 @@ spring:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://board.crsigumumday.ap-northeast-2.rds.amazonaws.com:3306/todo?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-      username: lee
-      password: da951023
+      username: ${MYSQL_ID}
+      password: ${MYSQL_PWD}
   jpa:
     hibernate:
       ddl-auto: update
