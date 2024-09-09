@@ -1,47 +1,57 @@
 # Todo List API
 
-이 프로젝트는 간단한 **Todo List API** 애플리케이션입니다. 이 API를 사용하면 사용자는 할 일을 생성, 조회, 수정, 삭제할 수 있습니다. Spring Boot를 기반으로 하여 RESTful API 형태로 제공됩니다.
+이 프로젝트는 **Spring Boot**를 기반으로 한 간단한 Todo List API 애플리케이션입니다. 사용자는 이 API를 통해 할 일을 생성, 조회, 수정, 삭제할 수 있습니다.
+
+---
 
 ## 프로젝트 개요
 
-이 애플리케이션은 할 일을 관리하기 위한 API로, 아래와 같은 기능을 제공합니다:
-- 할 일 생성 (Create)
-- 할 일 목록 조회 (Read)
-- 할 일 수정 (Update)
-- 할 일 삭제 (Delete)
+이 애플리케이션은 다음과 같은 주요 기능을 제공합니다:
+- **할 일 생성** (Create)
+- **할 일 목록 조회** (Read)
+- **할 일 수정** (Update)
+- **할 일 삭제** (Delete)
+
+---
 
 ## 주요 기술 스택
 
 - **Java 17**
 - **Spring Boot 3.3**
-- **AWS 데이터베이스 배포***
+- **AWS 데이터베이스 배포**
 - **JPA** (Java Persistence API)
+
+---
 
 ## 로컬에서 실행하기
 
-1. 이 프로젝트를 클론합니다.
+1. 프로젝트를 클론합니다:
 
-    ```
+    ```bash
     git clone https://github.com/leeuihyoun/todolist.git
     ```
-2. 데이터베이스 환경변수
-    현재 AWS로 DB를 배포해놓았기 때문에
-    src/main/resources/application.yml에 환경변수를 변경해주어야 합니다
-    MYSQL_ID 와 MYSQL_PWD를 메일로 보낸걸로 바꾸셔야 작동이 됩니다
+   
+2. 데이터베이스 환경변수 설정:
+    - `src/main/resources/application.yml`에서 **MYSQL_ID**와 **MYSQL_PWD**를 메일로 받은 값으로 설정해야 합니다.
+    
+    ```yaml
+    username: ${MYSQL_ID}
+    password: ${MYSQL_PWD}
     ```
-        username: ${MYSQL_ID} <-- 메일로 전송드린 ID
-        password: ${MYSQL_PWD} <-- 메일로 전송드린 PWD
+
+3. 프로젝트 실행하기:
+    
+    ```bash
+    ./gradlew bootrun
     ```
-4. 프로젝트 실행하기
- 
-    ```
-    ./gradlew bootrun  
-    ```
-5. 애플리케이션이 실행되면, `http://localhost:8080`에서 API를 사용할 수 있습니다.
+
+4. 애플리케이션이 실행되면, `http://localhost:8080`에서 API를 사용할 수 있습니다.
+
+---
 
 ## 데이터베이스 스키마
 
-이 애플리케이션은 H2 데이터베이스를 사용하며, 다음은 `todos` 테이블의 스키마입니다.
+H2 데이터베이스를 사용하며, 테이블 구조는 다음과 같습니다:
 
 ```sql
 CREATE TABLE todos (
@@ -69,13 +79,17 @@ CREATE TABLE todos (
             "id": 1,
             "title": "할 일 1",
             "description": "할 일 1 설명",
-            "completed": false
+            "completed": false,
+            "created_at": "2023-09-09T12:30:00",
+            "updated_at": "2023-09-10T14:00:00"
         },
         {
             "id": 2,
             "title": "할 일 2",
             "description": "할 일 2 설명",
-            "completed": true
+            "completed": true,
+            "created_at": "2023-09-08T11:00:00",
+            "updated_at": "2023-09-09T15:30:00"
         }
     ]
     ```
@@ -92,7 +106,8 @@ CREATE TABLE todos (
     {
         "title": "새로운 할 일",
         "description": "새로운 할 일 설명",
-        "completed": false
+        "completed": false,
+        "created_at": "2023-09-09T12:30:00"
     }
     ```
 
@@ -103,7 +118,8 @@ CREATE TABLE todos (
         "id": 3,
         "title": "새로운 할 일",
         "description": "새로운 할 일 설명",
-        "completed": false
+        "completed": false,
+        "created_at": "2023-09-09T12:30:00"
     }
     ```
 
@@ -118,7 +134,8 @@ CREATE TABLE todos (
     {
         "title": "수정된 할 일 제목",
         "description": "수정된 할 일 설명",
-        "completed": true
+        "completed": true,
+        "updated_at": "2023-09-09T15:30:00"
     }
     ```
 
@@ -129,7 +146,8 @@ CREATE TABLE todos (
         "id": 1,
         "title": "수정된 할 일 제목",
         "description": "수정된 할 일 설명",
-        "completed": true
+        "completed": true,
+        "updated_at": "2023-09-09T15:30:00"
     }
     ```
 
