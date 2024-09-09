@@ -22,7 +22,7 @@
 1. 이 프로젝트를 클론합니다.
 
     ```
-    git clone https://github.com/your-username/todo-api.git
+    git clone https://github.com/leeuihyoun/todolist.git
     ```
 
 2. 프로젝트 실행하기
