@@ -24,13 +24,19 @@
     ```
     git clone https://github.com/leeuihyoun/todolist.git
     ```
-
-2. 프로젝트 실행하기
+2. 데이터베이스 환경변수
+    현재 AWS로 DB를 배포해놓았기 때문에
+    src/main/resources/application.yml에 환경변수를 변경해주어야 합니다
+    MYSQL_ID 와 MYSQL_PWD를 메일로 보낸걸로 바꾸셔야 작동이 됩니다
+    ```
+        username: ${MYSQL_ID} <-- 메일로 전송드린 ID
+        password: ${MYSQL_PWD} <-- 메일로 전송드린 PWD
+    ```
+4. 프로젝트 실행하기
  
     ```
     ./gradlew bootrun  
     ```
-
 5. 애플리케이션이 실행되면, `http://localhost:8080`에서 API를 사용할 수 있습니다.
 
 ## 데이터베이스 스키마
