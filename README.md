@@ -28,7 +28,7 @@
 2. 프로젝트 실행하기
  
     ```
-    ./gradlew run  
+    ./gradlew bootrun  
     ```
 
 5. 애플리케이션이 실행되면, `http://localhost:8082`에서 API를 사용할 수 있습니다.
