@@ -10,9 +10,36 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
         }
         #todoForm, .edit-form {
+            display: flex;
+            flex-direction: column;
             margin-bottom: 20px;
+        }
+        #todoForm input, .edit-form input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        #todoForm button, .edit-form button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #todoForm button:hover, .edit-form button:hover {
+            background-color: #45a049;
         }
         #todoList {
             list-style-type: none;
@@ -22,19 +49,53 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .todo-item:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
         .todo-item button {
             margin-left: 10px;
+            padding: 7px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .todo-item button.complete-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .todo-item button.edit-btn {
+            background-color: #FFA500;
+            color: white;
+        }
+        .todo-item button.delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .todo-item button:hover {
+            opacity: 0.9;
         }
         .completed {
             background-color: #e0e0e0;
             text-decoration: line-through;
             color: #888;
         }
+        .timestamp {
+            font-size: 0.8em;
+            color: #888;
+        }
+        .modified {
+            color: red;
+        }
         .edit-form {
             display: none;
+            flex-direction: column;
         }
     </style>
 </head>
@@ -52,7 +113,16 @@
 <script>
     const API_URL = '/api/todos';
 
-    // Todo 목록 가져오기
+    function formatDate(date) {
+        return new Date(date).toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
     async function fetchTodos() {
         const response = await fetch(API_URL);
         const todos = await response.json();
@@ -65,14 +135,22 @@
             if (todo.completed) {
                 li.classList.add('completed');
             }
+            const isModified = todo.createdAt !== todo.updatedAt;
             li.innerHTML = `
-                <span>${todo.title} - ${todo.description || '설명 없음'}</span>
                 <div>
-                    <button onclick="toggleTodo(${todo.id}, ${!todo.completed})">
+                    <span>${todo.title} - ${todo.description || '설명 없음'}</span>
+                    <br>
+                    <span class="timestamp ${isModified ? 'modified' : ''}">
+                        작성: ${formatDate(todo.createdAt)}
+                        ${isModified ? `<br>수정: ${formatDate(todo.updatedAt)}` : ''}
+                    </span>
+                </div>
+                <div>
+                    <button class="complete-btn" onclick="toggleTodo(${todo.id}, ${!todo.completed})">
                         ${todo.completed ? '완료 취소' : '완료'}
                     </button>
-                    <button onclick="showEditForm(${todo.id})">수정</button>
-                    <button onclick="deleteTodo(${todo.id})">삭제</button>
+                    <button class="edit-btn" onclick="showEditForm(${todo.id})">수정</button>
+                    <button class="delete-btn" onclick="deleteTodo(${todo.id})">삭제</button>
                 </div>
             `;
             const editForm = document.createElement('form');
@@ -89,7 +167,6 @@
         });
     }
 
-    // 새 Todo 추가
     async function addTodo(event) {
         event.preventDefault();
         const title = document.getElementById('todoTitle').value;
@@ -103,7 +180,6 @@
         fetchTodos();
     }
 
-    // Todo 상태 토글 (완료/미완료)
     async function toggleTodo(id, completed) {
         const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
         const title = todoItem.querySelector('span').textContent.split(' - ')[0].trim();
@@ -116,25 +192,21 @@
         fetchTodos();
     }
 
-    // Todo 삭제
     async function deleteTodo(id) {
         await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
         fetchTodos();
     }
 
-    // 수정 폼 표시
     function showEditForm(id) {
         const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
         todoItem.querySelector('.edit-form').style.display = 'block';
     }
 
-    // 수정 취소
     function cancelEdit(id) {
         const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
         todoItem.querySelector('.edit-form').style.display = 'none';
     }
 
-    // Todo 수정
     async function updateTodo(event, id) {
         event.preventDefault();
         const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);

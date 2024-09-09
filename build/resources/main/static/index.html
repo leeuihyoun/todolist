@@ -11,7 +11,7 @@
             margin: 0 auto;
             padding: 20px;
         }
-        #todoForm {
+        #todoForm, .edit-form {
             margin-bottom: 20px;
         }
         #todoList {
@@ -32,6 +32,9 @@
             background-color: #e0e0e0;
             text-decoration: line-through;
             color: #888;
+        }
+        .edit-form {
+            display: none;
         }
     </style>
 </head>
@@ -58,8 +61,9 @@
         todos.forEach(todo => {
             const li = document.createElement('li');
             li.className = 'todo-item';
+            li.dataset.id = todo.id;
             if (todo.completed) {
-                li.classList.add('completed'); // 완료된 항목에 클래스 추가
+                li.classList.add('completed');
             }
             li.innerHTML = `
                 <span>${todo.title} - ${todo.description || '설명 없음'}</span>
@@ -67,9 +71,20 @@
                     <button onclick="toggleTodo(${todo.id}, ${!todo.completed})">
                         ${todo.completed ? '완료 취소' : '완료'}
                     </button>
+                    <button onclick="showEditForm(${todo.id})">수정</button>
                     <button onclick="deleteTodo(${todo.id})">삭제</button>
                 </div>
             `;
+            const editForm = document.createElement('form');
+            editForm.className = 'edit-form';
+            editForm.innerHTML = `
+                <input type="text" class="edit-title" value="${todo.title}" required>
+                <input type="text" class="edit-description" value="${todo.description || ''}">
+                <button type="submit">저장</button>
+                <button type="button" onclick="cancelEdit(${todo.id})">취소</button>
+            `;
+            editForm.onsubmit = (e) => updateTodo(e, todo.id);
+            li.appendChild(editForm);
             todoList.appendChild(li);
         });
     }
@@ -90,12 +105,9 @@
 
     // Todo 상태 토글 (완료/미완료)
     async function toggleTodo(id, completed) {
-        const todo = Array.from(document.querySelectorAll('.todo-item'))
-            .find(item => item.querySelector('button').onclick.toString().includes(`toggleTodo(${id}`));
-
-        const title = todo.querySelector('span').textContent.split(' - ')[0].trim();
-        const description = todo.querySelector('span').textContent.split(' - ')[1].trim();
-
+        const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
+        const title = todoItem.querySelector('span').textContent.split(' - ')[0].trim();
+        const description = todoItem.querySelector('span').textContent.split(' - ')[1].trim();
         await fetch(`${API_URL}/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -107,6 +119,34 @@
     // Todo 삭제
     async function deleteTodo(id) {
         await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        fetchTodos();
+    }
+
+    // 수정 폼 표시
+    function showEditForm(id) {
+        const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
+        todoItem.querySelector('.edit-form').style.display = 'block';
+    }
+
+    // 수정 취소
+    function cancelEdit(id) {
+        const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
+        todoItem.querySelector('.edit-form').style.display = 'none';
+    }
+
+    // Todo 수정
+    async function updateTodo(event, id) {
+        event.preventDefault();
+        const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
+        const title = todoItem.querySelector('.edit-title').value;
+        const description = todoItem.querySelector('.edit-description').value;
+        const completed = todoItem.classList.contains('completed');
+
+        await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description, completed })
+        });
         fetchTodos();
     }
 
