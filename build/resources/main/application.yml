@@ -1,12 +1,12 @@
-sever :
+server :
   port : 8080
 spring:
   datasource:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://board.crsigumumday.ap-northeast-2.rds.amazonaws.com:3306/todo?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-      username: ${MYSQL_ID}
-      password: ${MYSQL_PWD}
+      username: lee
+      password: da951023
   jpa:
     hibernate:
       ddl-auto: update
