@@ -35,8 +35,8 @@
     - `src/main/resources/application.yml`에서 **MYSQL_ID**와 **MYSQL_PWD**를 메일로 받은 값으로 설정해야 합니다.
     
     ```yaml
-    username: ${MYSQL_ID}
-    password: ${MYSQL_PWD}
+    username: ${MYSQL_ID} <-- 메일로 전송드린 ID
+    password: ${MYSQL_PWD} <-- 메일로 전송드린 PWD
     ```
 
 3. 프로젝트 실행하기:
