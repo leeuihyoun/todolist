@@ -14,7 +14,8 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
+    @Column(name = "member_idx")
+    private int memberIdx;
     @Column(name = "title")
     private String title;
 

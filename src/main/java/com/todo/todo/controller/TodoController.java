@@ -33,10 +33,12 @@ public class TodoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Todo> updateTodo(@PathVariable("id") Long id, @RequestBody Todo todoDetails) {
+        if (todoDetails.getTitle() == null || todoDetails.getTitle().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(null);  // 유효하지 않은 요청 처리
+        }
         Todo updatedTodo = todoService.updateTodo(id, todoDetails);
         return ResponseEntity.ok(updatedTodo);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTodo(@PathVariable("id") Long id) {
         todoService.deleteTodo(id);

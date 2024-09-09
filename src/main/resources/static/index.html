@@ -28,6 +28,11 @@
         .todo-item button {
             margin-left: 10px;
         }
+        .completed {
+            background-color: #e0e0e0;
+            text-decoration: line-through;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -53,6 +58,9 @@
         todos.forEach(todo => {
             const li = document.createElement('li');
             li.className = 'todo-item';
+            if (todo.completed) {
+                li.classList.add('completed'); // 완료된 항목에 클래스 추가
+            }
             li.innerHTML = `
                 <span>${todo.title} - ${todo.description || '설명 없음'}</span>
                 <div>
@@ -82,10 +90,16 @@
 
     // Todo 상태 토글 (완료/미완료)
     async function toggleTodo(id, completed) {
+        const todo = Array.from(document.querySelectorAll('.todo-item'))
+            .find(item => item.querySelector('button').onclick.toString().includes(`toggleTodo(${id}`));
+
+        const title = todo.querySelector('span').textContent.split(' - ')[0].trim();
+        const description = todo.querySelector('span').textContent.split(' - ')[1].trim();
+
         await fetch(`${API_URL}/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ completed })
+            body: JSON.stringify({ title, description, completed })
         });
         fetchTodos();
     }
